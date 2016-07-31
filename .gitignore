@@ -1,33 +1,193 @@
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+#include <stdio.h>		
+#include <time.h>		。
+#include <stdlib.h>
+struct player{
+	int num;
+	char name[10];
+	int win,tie,lose,integral;
+};
+ 
+//函数声明	
+void input_player(struct player *p,int n);
+void sort_player(struct player s[],int n);
+void output_player(struct player s[],int n);
+	
+void main()
+{
+	printf("*********欢迎来到石头剪刀布世界**********\n"); 
+	int x,w;
+	int number,n,sel,user;
+	char c;
+	struct player s[50],*p=s;
+	printf("请输入玩家总人数：");
+	scanf("%d",&n);
+	input_player(p,n);
 
-# Precompiled Headers
-*.gch
-*.pch
+	while(1)
+	{
+	printf("            菜单功能\n");
+	printf("1-练习模式     2-实战模式      \n");
+	printf("3-排行榜       4-游戏规则		0-退出\n");
+	printf("请选择输入1、2、3、4或0\n");
+	scanf("%d",&sel);
+	if(sel==0) break;
+	switch(sel)
+	{
+	
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
+	case 1:
+	srand((unsigned)time(NULL)); //初始化随机数，如果没有这条语句，每次运行电脑产生的随机数序列都是一样的
+	printf("进入游戏\n");
+	do{
+		int win=0,tie=0,lose=0;
+		do{
+		printf("请出拳（1.剪刀、2.石头、3.布）:");
+		scanf("%d",&user);
+		x=judge(user);
+		switch(x){
+			case 0:
+				printf("平手");
+				tie++;
+				break;
+			case 1:
+			case -2:
+				printf("电脑赢了\n");
+				lose++;
+				break;
+			case -1:
+			case 2:
+				printf("你赢了\n");
+				win++;
+				
+		}
+				
+		
+		}while(win+lose+tie<3&&win<2&&lose<2);
+		printf("赢%d局，输%d局，平%d局\n",win,lose,tie);
+			if(win-lose>0) printf("你赢了!\n");
+	  		if(win-lose<0) printf("你输了!\n");
+	  		if(win-lose==0) printf("平局\n");
+		printf("继续游戏按Y键、其它键退出");
+		getchar();
+		c=getchar();
+    }while(c=='y' || c=='Y');
+    break;
+    case 2:
+	
+	
+	printf("请输入你的编号：");
+	scanf("%d",&number);
+	number-=1;
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+	srand((unsigned)time(NULL)); //初始化随机数，如果没有这条语句，每次运行电脑产生的随机数序列都是一样的
+	printf("进入游戏\n");
+	do{
+		int a=0,b=0,c=0;
+		do{
+		printf("请出拳（1.剪刀、2.石头、3.布）:");
+		scanf("%d",&user);
+		x=judge(user);
+		switch(x){
+			case 0:
+				printf("平手");
+				a++;
+				p[number].tie++;
+				break;
+			case 1:
+			case -2:
+				printf("电脑赢了\n");
+				b++;
+				p[number].lose++;
+				break;
+			case -1:
+			case 2:
+				printf("你赢了\n");
+				c++;
+				p[number].win++;
+		}
+				
+		
+		}while(c+b+a<3&&c<2&&b<2);
+		
+		printf("赢%d局，输%d局，平%d局\n",c,b,a);
+			if(c-b>0){
+			 printf("你赢了!\n"); p[number].integral++;}
+	  		if(c-b<0) printf("你输了!\n");
+	  		if(c-b==0) printf("平局\n");
+		
+		printf("继续游戏按Y键、其它键退出");
+		getchar();
+		w=getchar();
+    }while(w=='y' || w=='Y');
+    break;
+		
+	
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+	case 3:
+		output_player(p,n);
+		break;
+		
+		
+	case 4:
+		
+		printf("				石头剪刀布游戏规则\n");
+		printf("游戏采取的是三局两胜的规则，当玩家或电脑赢两局后，自动结束对决，对决局数不超过3局\n");
+		break;
+		
+	
+	 
+	case 0:
+	printf("已经退出游戏");
+		break;
+		
+	
+	}
+	
+	}
+}
 
-# Debug files
-*.dSYM/
-*.su
+
+
+
+int judge(int m){
+	int n;
+	
+	srand((unsigned)time(NULL)); //初始化随机数，如果没有这条语句，每次运行电脑产生的随机数序列都是一样的
+		n=rand()%3+1; //产生1-3范围内的随机数
+		printf("电脑出%s\n",n==1?"剪刀":n==2?"石头":"布");
+	m=n-m;	
+		
+	return m;	
+}
+
+void input_player(struct player *p,int n){
+	int i;
+	for(i=0;i<n;i++){
+		printf("请输入第%d个玩家的信息（例:1 tom）：\n",i+1);
+		printf("编号	姓名  ：");
+		scanf("%d%s",&p[i].num,p[i].name);
+		
+		p[i].win=0;p[i].tie=0;p[i].lose=0;p[i].integral=0;
+	}
+}
+void output_player(struct player *p,int n){
+	int i;
+	
+	sort_player(p,n);
+	printf("		排行榜\n");
+	printf("编号	姓名	赢	平	输	积分\n");
+	for(i=0;i<n;i++){
+		printf("%-8d%-8s",p[i].num,p[i].name);
+		printf("%-8d%-8d%-8d%-8d\n",p[i].win,p[i].tie,p[i].lose,p[i].integral);
+	} 
+}
+
+void sort_player(struct player *p,int n){
+	int i,j,index;
+	struct player temp;
+	for(i=0;i<n-1;i++){
+		index=i;
+		for(j=i;j<n;j++) if(p[j].integral>p[index].integral)	index=j;
+		temp=p[i];p[i]=p[index];p[index]=temp;
+	}
+}
